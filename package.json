@@ -1,7 +1,6 @@
 {
   "name": "weather-dashboard",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -24,6 +23,8 @@
     "wait-on": "^7.2.0"
   },
   "dependencies": {
+    "express": "^4.21.1",
     "weather-dashboard": "file:"
-  }
+  },
+  "description": ""
 }

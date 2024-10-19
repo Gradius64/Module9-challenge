@@ -141,8 +141,129 @@ interface Coordinates {
   console.log('this is my function');
     // private parseCurrentWeather(response: any) {}
     // TODO: Complete buildForecastArray method
+    function buildForecastArray(periods: number): WeatherForecast[] {
+
+      const forecasts: WeatherForecast[] = [];
+    
+    
+    
+      for (let i = 0; i < periods; i++) {
+    
+        const date = new Date();
+    
+        date.setDate(date.getDate() + i);
+    
+    
+    
+        const temperatureCelsius = Math.floor(Math.random() * 10) + 10;
+    
+        const summary = getSummary();
+    
+    
+    
+        forecasts.push({
+    
+          date: date.toLocaleDateString(),
+    
+          temperatureC: temperatureCelsius,
+    
+          temperatureF: 32 + Math.round(temperatureCelsius * 9 / 5),
+    
+          summary: summary
+    
+        });
+    
+      }
+    
+    
+    
+      return forecasts;
+    
+    }
+    
+    
+    
+    function getSummary(): string {
+    
+      const summaries = [
+    
+        "Cloudy",
+    
+        "Rainy",
+    
+        "Sunny",
+    
+        "Partly Cloudy",
+    
+        "Windy"
+    
+      ];
+    
+    
+    
+      return summaries[Math.floor(Math.random() * summaries.length)];
+    
+    }
+    
+    
+    
+    interface WeatherForecast {
+    
+      date: string;
+    
+      temperatureC: number;
+    
+      temperatureF: number;
+    
+      summary: string;
+    
+    }
+   
+    
+    
     // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
     // TODO: Complete getWeatherForCity method
+    interface WeatherData {
+      // Define the structure of the weather data you expect
+      city: string;
+      temperature: number;
+      humidity: number;
+      windSpeed: number;
+      // Add other fields as necessary based on the API response
+  }
+  
+  async function getWeatherForCity(city: string): Promise<WeatherData | null> {
+      const apiKey: string = 'YOUR_API_KEY'; // Replace with your actual API key
+      const baseUrl: string = 'https://api.openweathermap.org/data/2.5/forecast';
+  
+      try {
+          // Make a request to the OpenWeather API
+          const response = await fetch(`${baseUrl}?q=${city}&appid=${apiKey}&units=metric`);
+  
+          // Check if the response is ok (status code 200)
+          if (!response.ok) {
+              throw new Error('City not found');
+          }
+  
+          // Parse the JSON response
+          const weatherData = await response.json();
+  
+          // Extract relevant data from the response and return it
+          const currentWeather: WeatherData = {
+              city: weatherData.city.name,
+              temperature: weatherData.list[0].main.temp,
+              humidity: weatherData.list[0].main.humidity,
+              windSpeed: weatherData.list[0].wind.speed,
+              // Map other fields as necessary
+          };
+  
+          return currentWeather;
+      } catch (error) {
+          console.error('Error fetching weather data:', error);
+          return null; // Return null in case of an error
+      }
+  }
+    
     // async getWeatherForCity(city: string) {}
   
   
