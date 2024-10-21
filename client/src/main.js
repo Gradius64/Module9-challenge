@@ -1,15 +1,4 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-require("./styles/jass.css");
+import './styles/jass.css';
 // * All necessary DOM elements selected
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
@@ -26,36 +15,36 @@ const humidityEl = document.getElementById('humidity');
 API Calls
 
 */
-const fetchWeather = (cityName) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield fetch('/api/weather/', {
+const fetchWeather = async (cityName) => {
+    const response = await fetch('/api/weather/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ cityName }),
     });
-    const weatherData = yield response.json();
+    const weatherData = await response.json();
     console.log('weatherData: ', weatherData);
     renderCurrentWeather(weatherData[0]);
     renderForecast(weatherData.slice(1));
-});
-const fetchSearchHistory = () => __awaiter(void 0, void 0, void 0, function* () {
-    const history = yield fetch('/api/weather/history', {
+};
+const fetchSearchHistory = async () => {
+    const history = await fetch('/api/weather/history', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
     });
     return history;
-});
-const deleteCityFromHistory = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    yield fetch(`/api/weather/history/${id}`, {
+};
+const deleteCityFromHistory = async (id) => {
+    await fetch(`/api/weather/history/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
         },
     });
-});
+};
 /*
 
 Render Functions
@@ -105,8 +94,8 @@ const renderForecastCard = (forecast) => {
         forecastContainer.append(col);
     }
 };
-const renderSearchHistory = (searchHistory) => __awaiter(void 0, void 0, void 0, function* () {
-    const historyList = yield searchHistory.json();
+const renderSearchHistory = async (searchHistory) => {
+    const historyList = await searchHistory.json();
     if (searchHistoryContainer) {
         searchHistoryContainer.innerHTML = '';
         if (!historyList.length) {
@@ -119,7 +108,7 @@ const renderSearchHistory = (searchHistory) => __awaiter(void 0, void 0, void 0,
             searchHistoryContainer.append(historyItem);
         }
     }
-});
+};
 /*
 
 Helper Functions
@@ -214,6 +203,6 @@ Initial Render
 
 */
 const getAndRenderHistory = () => fetchSearchHistory().then(renderSearchHistory);
-searchForm === null || searchForm === void 0 ? void 0 : searchForm.addEventListener('submit', handleSearchFormSubmit);
-searchHistoryContainer === null || searchHistoryContainer === void 0 ? void 0 : searchHistoryContainer.addEventListener('click', handleSearchHistoryClick);
+searchForm?.addEventListener('submit', handleSearchFormSubmit);
+searchHistoryContainer?.addEventListener('click', handleSearchHistoryClick);
 getAndRenderHistory();

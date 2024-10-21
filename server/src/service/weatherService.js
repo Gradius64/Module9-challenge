@@ -1,20 +1,18 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const url = "https://api.openweathermap.org/data/2.5";
 // TODO: Define a class for the Weather object
-class baseURL {
+class Weather {
+
+
     //  class WeatherAPIConfig {. < --- comment out
     //    private make!: string;
     // TODO: Define the baseURL, API key, and city name properties
-    constructor(baseURL, apiKey, cityName) { }
+    const = {
+        baseURL: 'https://api.example.com/data', // Replace with your actual API base URL
+        apiKey: 'YOUR_API_KEY_HERE', // Replace with your actual API key
+        cityName: 'New York' // Replace with the desired city name
+    };
+    
 }
 // TODO: Create fetchLocationData method
 class WeatherAPIConfig {
@@ -41,24 +39,22 @@ class WeatherAPIConfig {
     }
     // private buildWeatherQuery(coordinates: Coordinates): string {}
     // TODO: Create fetchAndDestructureLocationData method
-    fetchAndDestructureLocationData() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const geocodeQuery = this.buildGeocodeQuery();
-                const response = yield fetch(url);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const locationData = yield response.json();
-                // Destructure the relevant data
-                const { coord: { lat, lon }, name, weather } = locationData;
-                return { lat, lon, name, weather }; // Return the destructured data
+    async fetchAndDestructureLocationData() {
+        try {
+            const geocodeQuery = this.buildGeocodeQuery();
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-            catch (error) {
-                console.error('Error fetching location data:', error);
-                throw error; // Rethrow the error for further handling if needed
-            }
-        });
+            const locationData = await response.json();
+            // Destructure the relevant data
+            const { coord: { lat, lon }, name, weather } = locationData;
+            return { lat, lon, name, weather }; // Return the destructured data
+        }
+        catch (error) {
+            console.error('Error fetching location data:', error);
+            throw error; // Rethrow the error for further handling if needed
+        }
     }
     // private async fetchAndDestructureLocationData() {}
     // TODO: Create fetchWeatherData method
@@ -70,29 +66,60 @@ class WeatherAPIConfig {
             console.log('this is my function');
             // private parseCurrentWeather(response: any) {}
             // TODO: Complete buildForecastArray method
-            for (let i = 0; i < days; i++) {
-                const date = new Date(startDate);
-                date.setDate(startDate.getDate() + i); 
+            function buildForecastArray() {
+                const forecasts = [];
                 
-
-            // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
-            // TODO: Complete getWeatherForCity method
-            try {
-                const response = axios.get(BASE_URL, {
-                    params: {
-                        q: city,
-                        appid: API_KEY,
-                        units: 'metric' // or 'imperial' if you prefer Fahrenheit
-                    }
-                });
-                return response.data; // Return the weather data
-            } catch (error) {
-                console.error('Error fetching weather data:', error);
-                throw new Error('Could not retrieve weather data');
+                    const date = new Date();
+                    date.setDate(date.getDate());
+                    const temperatureCelsius = Math.floor(Math.random() * 10) + 10;
+                    const summary = getSummary();
+                    forecasts.push({
+                        date: date.toLocaleDateString(),
+                        temperatureC: temperatureCelsius,
+                        temperatureF: 32 + Math.round(temperatureCelsius * 9 / 5),
+                        summary: summary
+                    });
+                }
+                
             }
-        }
+            function getSummary() {
+                const summaries = [
+                    "Cloudy",
+                    "Rainy",
+                    "Sunny",
+                    "Partly Cloudy",
+                    "Windy"
+                ];
+                return summaries[Math.floor(Math.random() * summaries.length)];
+            }
+            async function getWeatherForCity() {
+                const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+                const baseUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+                try {
+                    // Make a request to the OpenWeather API
+                    const response = await fetch(`${baseUrl}?q=&appid=${apiKey}&units=metric`);
+                    // Check if the response is ok (status code 200)
+                    if (!response.ok) {
+                        throw new Error('City not found');
+                    }
+                    // Parse the JSON response
+                    const weatherData = await response.json();
+                    // Extract relevant data from the response and return it
+                    const currentWeather = {
+                        city: weatherData.city.name,
+                        temperature: weatherData.list[0].main.temp,
+                        humidity: weatherData.list[0].main.humidity,
+                        windSpeed: weatherData.list[0].wind.speed,
+                        // Map other fields as necessary
+                    };
+                    return currentWeather;
+                }
+                catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    return null; // Return null in case of an error
+                }
+            }
             // async getWeatherForCity(city: string) {}
         };
-    }
     }
 
